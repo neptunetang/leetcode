@@ -1,0 +1,50 @@
+"""
+Given a string, find the length of the longest substring without repeating characters.
+
+Example 1:
+
+Input: "abcabcbb"
+Output: 3
+Explanation: The answer is "abc", with the length of 3.
+Example 2:
+
+Input: "bbbbb"
+Output: 1
+Explanation: The answer is "b", with the length of 1.
+Example 3:
+
+Input: "pwwkew"
+Output: 3
+Explanation: The answer is "wke", with the length of 3.
+             Note that the answer must be a substring, "pwke" is a subsequence and not a substring.
+"""
+
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        Map<Character, Integer> map = new HashMap<>();
+        int result = 0;
+        for(int i=0, j=0; i<s.length(); i++){
+            if(map.containsKey(s.charAt(i))){
+                j = Math.max(map.get(s.charAt(i)), j);
+            }
+                map.put(s.charAt(i), i+1);
+                result = Math.max(result, i-j+1);
+        }
+        return result;
+    }
+}
+
+"""
+Summary:
+前两种情况很好想，利用hashmap，如果前面没有这个key，result++
+第三种情况是看了答案：
+设立j, i分别代表这个unique subarray的左右边界
+i随着for loop增长，考虑"pwwkew"的情况，第二个"w"需要变动左边界j
+先取出"w"在hashmap的位置，与现有左边界j比较 getmax
+result 在 i-j+1 和原有result之间 getmax
+记得来复习！！
+
+为什么map.put(s.charAt(i), i+1)
+系统提示要求“” => 1
+其实我也不知道为什么......
+"""

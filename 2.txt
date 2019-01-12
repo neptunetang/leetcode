@@ -1,0 +1,82 @@
+"""
+You are given two non-empty linked lists representing two non-negative integers. The digits are stored in reverse order and each of their nodes contain a single digit. Add the two numbers and return it as a linked list.
+
+You may assume the two numbers do not contain any leading zero, except the number 0 itself.
+
+Example:
+
+Input: (2 -> 4 -> 3) + (5 -> 6 -> 4)
+Output: 7 -> 0 -> 8
+Explanation: 342 + 465 = 807.
+"""
+/*
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+ class Solution {
+     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+         ListNode head = new ListNode(0);
+         ListNode current = head;
+         int carry = 0;
+         while(l1 != null || l2 != null){
+             int sum = 0;
+             if(l1 != null){
+                 sum += l1.val;
+                 l1 = l1.next;
+             }
+             if(l2 != null){
+                 sum += l2.val;
+                 l2 = l2.next;
+             }
+             sum += carry;
+             carry = sum/10;
+             current.next = new ListNode(sum%10);
+             current = current.next;
+         }
+         if(carry > 0){
+             current.next = new ListNode(carry);
+         }
+         return head.next;
+     }
+ }
+
+"""
+Summary:
+  2->4->3->null
++ 5->6->4->null
+= 7->0->8->null
+
+从第一个开始l1.val, l2.val 都存在， 2+5=7
+l1,l2分别等于链表的l1.next, l2.next
+第二个l1.val, l2.val 都存在， 4+6=10
+（这个一开始并没有想到）
+这里不采用carry = 1因为这样以后还要在while里加if(carry==1)的判断
+carry = 10/10 = 1
+result = 10%10 = 0
+第三个l1.val, l2.val 都存在， 3+4+carry = 8
+
+一开始没有想到要创建一个空head，创建了后方便很多，否则在while loop里面结果的第一个value不太好2存
+遇见的问题：
+忘记考虑如果两个链表长度不同，fail in example [1,8], [0]
+0->next = null; null->next =>runtime error
+添加：
+if(l1 != null){
+  sum += l1.val;
+  *l1 = l1.next;
+}
+if(l2 != null){
+  sum += l2.val;
+  *l2 = l2.next;
+}
+
+忘记考虑最高位还有carry（多出了新的一位数，例如900+100 = 1000）
+添加
+if(carry > 0){
+    current.next = new ListNode(carry);
+}
+如果carry不为0，就再在链表后面加一个node
+"""
