@@ -1,0 +1,57 @@
+"""
+Given a string s, find the longest palindromic substring in s. You may assume that the maximum length of s is 1000.
+
+Example 1:
+
+Input: "babad"
+Output: "bab"
+Note: "aba" is also a valid answer.
+Example 2:
+
+Input: "cbbd"
+Output: "bb"
+"""
+
+Solution:
+class Solution {
+    public String longestPalindrome(String s) {
+        if (s == null || s.length() < 1)
+            return "";
+        int resultStart = 0, resultEnd = 0;
+        for(int i=0; i<s.length(); i++){
+            int len1 = expandCenter(s, i, i);
+            int len2 = 0;
+            if(i<s.length()-1 && s.charAt(i) == s.charAt(i+1))
+                len2 = expandCenter(s, i, i+1);
+            int len = Math.max(len1, len2);
+            if(len > resultEnd - resultStart+1){
+                resultStart = i-(len-1)/2;
+                resultEnd = i+len/2;
+            }
+        }
+        return s.substring(resultStart, resultEnd+1);
+    }
+    public int expandCenter(String s, int left, int right){
+        int l = left, r = right;
+        while(l>0 && r<s.length()-1 && s.charAt(l-1) == s.charAt(r+1)){
+            l--;
+            r++;
+        }
+        return r-l+1;
+    }
+}
+
+"""
+Summary:
+暴力解决：把所有的substring都列出来，一个一个检查有没有回文序列
+寻找所有substring：(1+n)n/2 = O(n^2)
+verify是不是回文序列需要O(n)
+所以一共O(n^3)
+
+本解法：通过移动中央数字，向两边扩散
+需要注意的是中央可能会有两位相同，例如abba（bb为中央）
+所以一共n+(n-1)=2n-1个center
+利用expandCenter计算回文序列长度，更新len
+（我就想不到，真的牛逼了这个想法）
+（呜呜呜垃圾海王）
+"""
