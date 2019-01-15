@@ -1,0 +1,56 @@
+'''
+Z字形序列
+The string "PAYPALISHIRING" is written in a zigzag pattern on a given number of rows like this: (you may want to display this pattern in a fixed font for better legibility)
+
+P   A   H   N
+A P L S I I G
+Y   I   R
+And then read line by line: "PAHNAPLSIIGYIR"
+
+Write the code that will take a string and make this conversion given a number of rows:
+
+string convert(string s, int numRows);
+Example 1:
+
+Input: s = "PAYPALISHIRING", numRows = 3
+Output: "PAHNAPLSIIGYIR"
+Example 2:
+
+Input: s = "PAYPALISHIRING", numRows = 4
+Output: "PINALSIGYAHRPI"
+Explanation:
+
+P     I    N
+A   L S  I G
+Y A   H R
+P     I
+'''
+
+Solution:
+class Solution {
+    public String convert(String s, int numRows) {
+        if(numRows == 1)
+            return s;
+        StringBuilder result = new StringBuilder();
+        int cycle = 2*numRows-2;
+        int len = s.length();
+
+        for(int i=0; i<numRows; i++){
+            for(int j=0; j+i<len; j+=cycle){
+                result.append(s.charAt(j+i));
+                if(i!=0&&i!=numRows-1&&j+cycle-i<len)
+                    result.append(s.charAt(j+cycle-i));
+            }
+        }
+        return result.toString();
+    }
+}
+
+'''
+Summary:
+Z字形序列，研究后发现每2n-2一个循环，这里采用直接按照最终result的顺序来一个字母一个字母读取
+用到了新的知识“StringBuilder”，用到了他的 append 的功能，来添加字母进入string，最后用toString结束
+中间的字母的规律为 2n-2-i
+所以我们先添加2n-2，因为第一行和最后一行是没有中间字母的，所以我们忽略这两种情况，还有一种情况需要考虑的是：
+计算出来的下一个中间字母超出所给string.length
+'''
